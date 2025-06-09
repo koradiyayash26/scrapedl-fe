@@ -7,25 +7,21 @@ const Home = () => {
   const movies_category = [
     { id: 1, name: "Bollywood", url: "/bollywood" },
     { id: 2, name: "Hollywood", url: "/hollywood" },
-    { id: 3, name: "South Indian", url: "/south-indian" },
-    { id: 4, name: "Korean", url: "/korean" },
-    { id: 5, name: "Anime", url: "/anime" },
-    { id: 6, name: "Web Series", url: "/web-series" },
-    { id: 7, name: "Documentary", url: "/documentary" },
-    { id: 8, name: "Horror", url: "/horror" },
-    { id: 9, name: "Comedy", url: "/comedy" },
-    { id: 10, name: "Action", url: "/action" },
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState(movies_category[1]);
+  const savedCategory = localStorage.getItem('category') || "Hollywood";
+  const defaultCategory = movies_category.find(cat => cat.name === savedCategory) || movies_category[1]; 
+  
+  const [selectedCategory, setSelectedCategory] = useState(defaultCategory);
   const [searchText, setSearchText] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [activeSearchTerm, setActiveSearchTerm] = useState("");
-
-  const { data, isLoading, error } = useSearch(activeSearchTerm);
+  
+  const { data, isLoading, error } = useSearch(activeSearchTerm,defaultCategory.name);
 
   let MovieData = data || [];
+
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -33,6 +29,7 @@ const Home = () => {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+    localStorage.setItem('category',category.name)
     setIsDropdownOpen(false);
   };
 
